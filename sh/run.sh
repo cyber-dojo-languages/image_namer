@@ -12,7 +12,6 @@ absPath()
 readonly START_POINT_DIR=`absPath "${1}"`
 
 docker run \
-  --interactive \
   --rm \
   --volume "${START_POINT_DIR}:/data:ro" \
   cyberdojofoundation/image_namer

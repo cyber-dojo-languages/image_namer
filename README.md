@@ -9,14 +9,16 @@
 ```bash
 $ git clone https://github.com/cyber-dojo-languages/python.git
 $ cd python
-$ docker run --rm --volume "${PWD}:/data:ro" cyberdojofoundation/image_namer
+$ NAME=$(docker run --rm --volume "${PWD}:/data:ro" cyberdojofoundation/image_namer)
+$ echo ${NAME}
 cyberdojofoundation/python
 ```
 
 ```bash
 $ git clone https://github.com/cyber-dojo-languages/python-pytest.git
 $ cd python-pytest
-$ docker run --rm --volume "${PWD}:/data:ro" cyberdojofoundation/image_namer
+$ NAME=$(docker run --rm --volume "${PWD}:/data:ro" cyberdojofoundation/image_namer)
+$ echo ${NAME}
 cyberdojofoundation/python_pytest
 ```
 

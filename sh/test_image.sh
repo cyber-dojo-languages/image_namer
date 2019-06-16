@@ -22,16 +22,21 @@ assert_equals()
   fi
 }
 
+docker_run_image_namer()
+{
+  docker run --rm --volume "${PWD}:/data:ro" cyberdojofoundation/image_namer
+}
+
 cd ${TMP_DIR}
 git clone https://github.com/cyber-dojo-languages/python.git
 cd python
 EXPECTED=cyberdojofoundation/python
-ACTUAL=$(docker run --rm --volume "${PWD}:/data:ro" cyberdojofoundation/image_namer)
+ACTUAL=$(docker_run_image_namer)
 assert_equals "${EXPECTED}" "${ACTUAL}"
 
 cd ${TMP_DIR}
 git clone https://github.com/cyber-dojo-languages/python-pytest.git
 cd python-pytest
 EXPECTED=cyberdojofoundation/python_pytest
-ACTUAL=$(docker run --rm --volume "${PWD}:/data:ro" cyberdojofoundation/image_namer)
+ACTUAL=$(docker_run_image_namer)
 assert_equals "${EXPECTED}" "${ACTUAL}"

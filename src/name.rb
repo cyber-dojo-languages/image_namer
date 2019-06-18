@@ -13,7 +13,7 @@ def test_framework_filename
 end
 
 def base_language_filename
-  '/data/docker/image_name.json'
+  '/data/image_name.json'
 end
 
 if File.exist?(test_framework_filename)

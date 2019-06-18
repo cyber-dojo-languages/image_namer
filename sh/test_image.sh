@@ -19,9 +19,9 @@ assert_equals()
   local -r expected="${1}"
   local -r actual="${2}"
   if [ "${expected}" != "${actual}" ]; then
-    echo 'FAILED'
     echo "expected: ${expected}"
     echo "  actual: ${actual}"
+    echo 'assert_equals() FAILED'
     exit 3
   fi
 }

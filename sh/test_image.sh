@@ -7,6 +7,7 @@ readonly TMP=$(cd ${MY_DIR} && mktemp -d XXXXXX)
 readonly TMP_DIR=${MY_DIR}/${TMP}
 remove_tmp_dir() { rm -rf "${TMP_DIR}" > /dev/null; }
 trap remove_tmp_dir INT EXIT
+source "${MY_DIR}/image_name.sh"
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 assert_equals()
@@ -32,7 +33,7 @@ image_namer()
   docker run \
     --rm \
     --volume "${PWD}:/data:ro" \
-      cyberdojotools/image_namer
+      "$(image_name)"
 }
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - -

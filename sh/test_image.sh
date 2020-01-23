@@ -1,49 +1,64 @@
-#!/bin/bash
-set -e
+#!/bin/bash -Eeu
 
 readonly MY_DIR="$( cd "$( dirname "${0}" )" && pwd )"
 # don't create TMP_DIR off /tmp because on Docker Toolbox
 # /tmp will not be available on the default VM
 readonly TMP=$(cd ${MY_DIR} && mktemp -d XXXXXX)
 readonly TMP_DIR=${MY_DIR}/${TMP}
-
-remove_tmp_dir()
-{
-  rm -rf "${TMP_DIR}" > /dev/null;
-}
-
+remove_tmp_dir() { rm -rf "${TMP_DIR}" > /dev/null; }
 trap remove_tmp_dir INT EXIT
 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 assert_equals()
 {
   local -r expected="${1}"
   local -r actual="${2}"
   if [ "${expected}" != "${actual}" ]; then
-    echo "expected: ${expected}"
-    echo "  actual: ${actual}"
-    echo 'assert_equals() FAILED'
-    exit 3
+    echo '--------------------------------------------'
+    echo expected
+    echo "${expected}"
+    echo '--------------------------------------------'
+    echo actual
+    echo "${actual}"
+    echo '--------------------------------------------'
+    echo 'FAILED: assert_equals()'
+    exit 42
   fi
 }
 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 image_namer()
 {
   docker run \
     --rm \
     --volume "${PWD}:/data:ro" \
-      cyberdojofoundation/image_namer
+      cyberdojotools/image_namer
 }
 
-cd ${TMP_DIR}
-git clone https://github.com/cyber-dojo-languages/python.git
-cd python
-EXPECTED=cyberdojofoundation/python
-ACTUAL=$(image_namer)
-assert_equals "${EXPECTED}" "${ACTUAL}"
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+check_base_language_repo()
+{
+  echo Checking python
+  cd ${TMP_DIR}
+  git clone https://github.com/cyber-dojo-languages/python.git
+  cd python
+  local -r expected=cyberdojofoundation/python
+  local -r actual=$(image_namer)
+  assert_equals "${expected}" "${actual}"
+}
 
-cd ${TMP_DIR}
-git clone https://github.com/cyber-dojo-languages/python-pytest.git
-cd python-pytest
-EXPECTED=cyberdojofoundation/python_pytest
-ACTUAL=$(image_namer)
-assert_equals "${EXPECTED}" "${ACTUAL}"
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+check_test_framework_repo()
+{
+  echo Checking python-pytest
+  cd ${TMP_DIR}
+  git clone https://github.com/cyber-dojo-languages/python-pytest.git
+  cd python-pytest
+  local -r expected=cyberdojofoundation/python_pytest
+  local -r actual=$(image_namer)
+  assert_equals "${expected}" "${actual}"
+}
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+check_base_language_repo
+check_test_framework_repo
